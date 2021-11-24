@@ -1,4 +1,4 @@
-defmodule ReportGenerator.Parser do
+defmodule GenReport.Parser do
   def parse_file(filename) do
     "reports/#{filename}"
     |> File.stream!()
@@ -12,6 +12,24 @@ defmodule ReportGenerator.Parser do
     |> List.update_at(1, &String.to_integer/1)
     |> List.update_at(2, &String.to_integer/1)
     |> List.update_at(3, &String.to_integer/1)
+    |> List.update_at(3, &get_month/1)
     |> List.update_at(4, &String.to_integer/1)
+  end
+
+  defp get_month(number_month) do
+    case number_month do
+      1 -> "janeiro"
+      2 -> "fevereiro"
+      3 -> "março"
+      4 -> "abril"
+      5 -> "maio"
+      6 -> "junho"
+      7 -> "julho"
+      8 -> "agosto"
+      9 -> "setembro"
+      10 -> "outubro"
+      11 -> "novembro"
+      12 -> "dezembro"
+    end
   end
 end

@@ -1,5 +1,5 @@
 defmodule ReportGenerator do
-  alias ReportGenerator.Parser
+  alias GenReport.Parser
 
   @months [
     "janeiro",
@@ -37,6 +37,8 @@ defmodule ReportGenerator do
     2020
   ]
 
+  def call(), do: {:error, "Please, provide a file"}
+
   def call(filename) do
     filename
     |> Parser.parse_file()
@@ -66,9 +68,8 @@ defmodule ReportGenerator do
   end
 
   defp sum_hours_per_month(name, quantity, month, hours_per_month) do
-    name_month = get_month(month)
     months = hours_per_month[name]
-    months_updated = Map.put(months, name_month, months[name_month] + quantity)
+    months_updated = Map.put(months, month, months[month] + quantity)
     Map.put(hours_per_month, name, months_updated)
   end
 
@@ -76,24 +77,7 @@ defmodule ReportGenerator do
     Map.put(all_hours, name, all_hours[name] + quantity)
   end
 
-  defp get_month(number_month) do
-    case number_month do
-      1 -> "janeiro"
-      2 -> "fevereiro"
-      3 -> "março"
-      4 -> "abril"
-      5 -> "maio"
-      6 -> "junho"
-      7 -> "julho"
-      8 -> "agosto"
-      9 -> "setembro"
-      10 -> "outubro"
-      11 -> "novembro"
-      12 -> "dezembro"
-    end
-  end
-
-  def report_acc do
+  defp report_acc do
     all_hours = initial_state_all_hours()
     hours_per_month = initial_state_hours_per_month()
     hours_per_year = initial_state_hours_per_year()

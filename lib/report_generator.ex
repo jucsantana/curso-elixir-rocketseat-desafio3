@@ -40,9 +40,41 @@ defmodule ReportGenerator do
   def call(), do: {:error, "Please, provide a file"}
 
   def call(filename) do
-    filename
-    |> Parser.parse_file()
-    |> Enum.reduce(report_acc(), fn line, acc -> sum_values(line, acc) end)
+    result = filename
+                |> Parser.parse_file()
+                |> Enum.reduce(report_acc(), fn line, acc -> sum_values(line, acc) end)
+   {:ok, result}
+  end
+
+   def call_from_many(filenames) do
+       result = filenames
+                 |> Task.async_stream(&call/1)
+                 |> Enum.reduce(report_acc(), fn {:ok,result}, acc -> sum_reports(acc, elem(result,1)) end)
+      {:ok, result}
+   end
+
+
+  defp sum_reports( %{  "hours_per_month" => hours_per_month1,
+                        "all_hours" => all_hours1,
+                        "hours_per_year" => hours_per_year1
+                      },  %{
+                        "hours_per_month" => hours_per_month2,
+                        "all_hours" => all_hours2,
+                        "hours_per_year" => hours_per_year2
+                      }) do
+
+   hours_per_month = merge_maps(hours_per_month1, hours_per_month2)
+   all_hours = merge_maps(all_hours1, all_hours2)
+   hours_per_year = merge_maps(hours_per_year1, hours_per_year2)
+     %{
+       "hours_per_month" => hours_per_month,
+       "all_hours" => all_hours,
+       "hours_per_year" => hours_per_year
+     }
+  end
+
+  defp merge_maps(map1, map2) do
+    Map.merge(map1, map2, fn _k, v1, v2 -> v1+v2 end)
   end
 
   defp sum_values(

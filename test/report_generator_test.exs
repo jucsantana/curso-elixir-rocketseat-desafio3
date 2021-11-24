@@ -8,7 +8,7 @@ defmodule ReportGeneratorTest do
       response =
         file_name
         |> ReportGenerator.call()
-      expected_response = %{
+      expected_response = {:ok, %{
         "all_hours" => %{
           "Cleiton" => 13797,
           "Daniele" => 13264,
@@ -175,7 +175,7 @@ defmodule ReportGeneratorTest do
           "Rafael" => %{2016 => 2684, 2017 => 2570, 2018 => 2628, 2019 => 2786, 2020 => 2929},
           "Vinicius" => %{2016 => 2530, 2017 => 2720, 2018 => 2654, 2019 => 2640, 2020 => 2868}
         }
-      }
+      }}
       assert response == expected_response
     end
 

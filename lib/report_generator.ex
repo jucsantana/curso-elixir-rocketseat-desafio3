@@ -74,7 +74,7 @@ defmodule ReportGenerator do
   end
 
   defp merge_maps(map1, map2) do
-    Map.merge(map1, map2, fn _k, v1, v2 -> v1+v2 end)
+    Map.merge(map1, map2, fn _k, v1, v2 -> v1 + v2 end)
   end
 
   defp sum_values(
